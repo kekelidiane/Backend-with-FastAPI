@@ -1,0 +1,12 @@
+#pip install -r requirements.txt pour installer ces dep
+
+fastapi
+uvicorn
+bcrypt
+passlib
+python-jose
+python-multipart
+pydantic
+sqlalchemy[asyncio]
+asyncpg
+python-dotenv
