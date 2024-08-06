@@ -1,8 +1,14 @@
 # Backend du site de l'EPL
 
-Brief description of the project.
+The project involves designing, creating, and developing the website for the École Polytechnique de Lomé (EPL) to communicate about the school's front office activities.
 
 ## Features
+
+- **[FastAPI](https://fastapi.tiangolo.com/)** (Python 3.8)
+- **[PostgreSQL](https://www.postgresql.org/)** for the database
+- **[SqlAlchemy](https://www.sqlalchemy.org/)** for ORM
+
+## Functionalities
 
 - Informational support on the institutional structure and organization
 - Informational support on training programs and courses
@@ -86,7 +92,7 @@ To access the interactive API documentation, start the server and open your brow
 
 ## Contributing
 
-Contributions are welcome! Please read the `CONTRIBUTING.md` file for details on our code of conduct and the process for submitting pull requests.
+Contributions are welcome!
 
 ## License
 
