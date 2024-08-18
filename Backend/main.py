@@ -1,7 +1,8 @@
 from fastapi import FastAPI
-from routes import article, auth, club
+from article import routers
+# import article.routes
 
 app = FastAPI()
 
-app.include_router(article.router, prefix="/article")
+app.include_router(routers.router, prefix="/article")
 # app.include_router(auth.router, prefix="/auth")

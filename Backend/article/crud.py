@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session
 from typing import List
 from fastapi import HTTPException
-from models import Article
-from schemas import ArticleCreate, ArticleUpdate
+from . import schemas, models
 
-def create_article(db: Session, article: ArticleCreate, file_urls: List[str]):
-    new_article = Article(
+def create_article(db: Session, article: schemas.ArticleCreate, file_urls: List[str]):
+    new_article = models.Article(
         id_article=article.id_article,
         title=article.title,
         author=article.author,
@@ -22,10 +21,10 @@ def create_article(db: Session, article: ArticleCreate, file_urls: List[str]):
     return new_article
 
 def get_articles(db: Session):
-    return db.query(Article).all()
+    return db.query(models.Article).all()
 
-def update_article(db: Session, id_article: str, article: ArticleUpdate):
-    db_article = db.query(Article).filter(Article.id_article == id_article).first()
+def update_article(db: Session, id_article: str, article: schemas.ArticleUpdate):
+    db_article = db.query(models.Article).filter(models.Article.id_article == id_article).first()
     if not db_article:
         raise HTTPException(status_code=404, detail="Article not found")
     
@@ -37,7 +36,7 @@ def update_article(db: Session, id_article: str, article: ArticleUpdate):
     return db_article
 
 def delete_article(db: Session, id_article: str):
-    db_article = db.query(Article).filter(Article.id_article == id_article).first()
+    db_article = db.query(models.Article).filter(models.Article.id_article == id_article).first()
     if not db_article:
         raise HTTPException(status_code=404, detail="Article not found")
     

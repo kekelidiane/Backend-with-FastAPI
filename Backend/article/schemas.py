@@ -9,19 +9,17 @@ class ArticleCreate(BaseModel):
     author: str
     content: str
     source: Optional[str] = None
-    date: Optional[str] = None
-    visuals: Optional[str] = None
+    date: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ArticleUpdate(BaseModel):
     title: Optional[str] = None
     author: Optional[str] = None
     content: Optional[str] = None
     source: Optional[str] = None
-    date: Optional[str] = None
-    visuals: Optional[str] = None
+    date: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
