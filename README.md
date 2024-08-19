@@ -113,12 +113,7 @@ Le fichier de configuration `alembic.ini` contient les paramètres de connexion 
 
 ### 5. **Conseils de Débogage**
 
-Ajoutez une section sur le débogage des erreurs courantes que vous pourriez rencontrer lors de l'utilisation d'Alembic.
-
-```markdown
-## Débogage
-
-Si vous rencontrez des problèmes avec les migrations, vérifiez les éléments suivants :
+    Si vous rencontrez des problèmes avec les migrations, vérifiez les éléments suivants :
 
 - **Configuration de la Base de Données** : Assurez-vous que les informations de connexion dans `alembic.ini` sont correctes.
 - **MetaData** : Vérifiez que `target_metadata` dans `env.py` est correctement configuré avec vos modèles SQLAlchemy.
