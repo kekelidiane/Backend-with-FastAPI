@@ -1,35 +1,68 @@
+from datetime import datetime
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from sqlalchemy import select
 
 from core.database import get_db
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from . import crud, schemas, models
 
 router = APIRouter()
 
 MAX_FILE_SIZE_MB = 100  # Taille maximale du fichier en Mo
 
-@router.post('/')
-async def create_article(article: schemas.ArticleCreate, db: Session = Depends(get_db)):
-    db_article = await crud.create_article(db, article)
-    return db_article
+@router.post('/', response_model=schemas.Article)
+async def create_article(article: schemas.ArticleCreate, db: AsyncSession = Depends(get_db)):
+    new_article = models.Article(
+        title=article.title,
+        author=article.author,
+        content=article.content,
+        source=article.source or "Unknown",
+        date=(article.date or datetime.now()).replace(tzinfo=None)  # Utiliser la date actuelle si None
+    )
+    
+    db.add(new_article)
+    await db.commit()
+    await db.refresh(new_article)
+
+    return new_article
+    
 
 @router.get('/')
-async def get_articles(db: Session = Depends(get_db)):
-    return crud.get_articles(db)
+async def get_articles(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(models.Article))
+    articles = result.scalars().all()
+    return articles
 
-@router.put("/{id}")
-async def update_article(id_article: str, article: schemas.ArticleUpdate, db: Session = Depends(get_db)):
-    return crud.update_article(db, id_article, article)
+@router.put("/{id}", response_model=schemas.Article)
+async def update_article(id_article: int, article: schemas.ArticleUpdate, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(models.Article).where(models.Article.id == id_article))
+    old_article = result.scalar_one_or_none()  # pour obtenir un seul article ou None
+
+    if old_article is None:
+        raise HTTPException(status_code=404, detail="Article introuvable")
+    
+    for key, value in article.model_dump(exclude_unset=True).items():      # Mettre à jour les champs de l'article
+        setattr(old_article, key, value)
+
+    # try:
+    await db.commit()
+    await db.refresh(old_article)
+
+    # except Exception as e:
+    #         await db.rollback()
+    #         raise HTTPException(status_code=500, detail=str(e))
+    
+    return old_article
 
 @router.delete("/{id}")
-async def delete_article(id_article: str, db: Session = Depends(get_db)):
+async def delete_article(id_article: str, db: AsyncSession = Depends(get_db)):
     return crud.delete_article(db, id_article)
 
-
+#Ancienne fonction potentiellement la cause d'erreurs donc à revoir
 '''
 async def create_article(
     article: schemas.ArticleCreate, 
-    #files: List[UploadFile] = File(...), 
+    files: List[UploadFile] = File(...), 
     db: Session = Depends(get_db)
 ):
     file_urls = []

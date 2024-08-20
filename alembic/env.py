@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from alembic import context
 
 # Add your model's MetaData object here for 'autogenerate' support.
-from Backend.article.models import Base
+from article.models import Base
 
 # Alembic Config object, providing access to the .ini file values.
 config = context.config

@@ -36,8 +36,7 @@ Le projet consiste à concevoir, créer et développer le site web pour l'École
 
 1. Clonez le dépôt :
     ```sh
-    git clone https://github.com/kekelidiane/Backend_site.git
-    cd Backend_site
+    git clone https://github.com/kekelidiane/Stage-EPL/Backend-with-FastAPI.git
     ```
 
 2. Créez et activez un environnement virtuel :
@@ -75,7 +74,7 @@ Le projet consiste à concevoir, créer et développer le site web pour l'École
 
 Assurez-vous d'avoir Alembic installé dans votre environnement virtuel. Vous pouvez l'installer via pip :
 
-    ```sh
+    ```bash
     pip install alembic
     ```	
 
@@ -110,10 +109,8 @@ Le fichier de configuration `alembic.ini` contient les paramètres de connexion 
     ```bash
     alembic downgrade <revision>
 
-
 ### 5. **Conseils de Débogage**
-
-    Si vous rencontrez des problèmes avec les migrations, vérifiez les éléments suivants :
+Si vous rencontrez des problèmes avec les migrations, vérifiez les éléments suivants :
 
 - **Configuration de la Base de Données** : Assurez-vous que les informations de connexion dans `alembic.ini` sont correctes.
 - **MetaData** : Vérifiez que `target_metadata` dans `env.py` est correctement configuré avec vos modèles SQLAlchemy.
@@ -121,25 +118,22 @@ Le fichier de configuration `alembic.ini` contient les paramètres de connexion 
 
 
 ## Démarrage du Serveur
-    Pour démarrer le serveur de développement :
-    ```sh
+Pour démarrer le serveur de développement :
+    ```bash
     uvicorn app.main:app --reload
-    ```	
 
 ## Exécution des Tests
 
 Pour excécuter les futurs tests, utilisez:
-    ```sh
+    ``` 
     pytest
     ```
 
 ## Structure du projet
 
-Confere projet
+Confère projet
 
 ## Documentation de l'API
-
-
 Pour accéder à la documentation interactive de l'API, démarrez le serveur et ouvrez votre navigateur aux adresses suivantes :
 
 - Swagger documentation: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
