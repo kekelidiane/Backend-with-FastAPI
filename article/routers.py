@@ -1,5 +1,5 @@
 from datetime import datetime
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy import select
 
 from core.database import get_db
@@ -10,7 +10,13 @@ router = APIRouter()
 
 MAX_FILE_SIZE_MB = 100  # Taille maximale du fichier en Mo
 
-@router.post('/', response_model=schemas.Article)
+@router.post(
+    '/',
+    response_model=schemas.Article,
+    status_code = status.HTTP_200_OK,
+    response_model_by_alias = True,
+    response_description = "Artcile créé avec succes"
+)
 async def create_article(article: schemas.ArticleCreate, db: AsyncSession = Depends(get_db)):
     new_article = models.Article(
         title=article.title,
@@ -27,13 +33,24 @@ async def create_article(article: schemas.ArticleCreate, db: AsyncSession = Depe
     return new_article
     
 
-@router.get('/')
+@router.get(
+    '/',
+    status_code = status.HTTP_200_OK,
+    response_model_by_alias = True,
+    response_description = "Articles recupérés"
+)
 async def get_articles(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(models.Article))
     articles = result.scalars().all()
     return articles
 
-@router.put("/{id}", response_model=schemas.Article)
+@router.put(
+    "/{id}",
+    response_model=schemas.Article,
+    status_code = status.HTTP_200_OK,
+    response_model_by_alias = True,
+    response_description = "Artcile à jour"
+)
 async def update_article(id_article: int, article: schemas.ArticleUpdate, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(models.Article).where(models.Article.id == id_article))
     old_article = result.scalar_one_or_none()  # pour obtenir un seul article ou None
@@ -54,9 +71,21 @@ async def update_article(id_article: int, article: schemas.ArticleUpdate, db: As
     
     return old_article
 
-@router.delete("/{id}")
-async def delete_article(id_article: str, db: AsyncSession = Depends(get_db)):
-    return crud.delete_article(db, id_article)
+@router.delete(
+    "/{id}",
+    status_code = status.HTTP_200_OK,
+    response_description = "Artcile supprimé !"
+)
+async def delete_article(id: int, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(models.Article).where(models.Article.id == id))
+    old_article = result.scalar_one_or_none()  # pour obtenir un seul article ou None
+
+    if not old_article:
+        raise HTTPException(status_code=404, detail="Article avec ID {id} introuvable")
+    
+    await db.delete(old_article)
+    await db.commit()
+    
 
 #Ancienne fonction potentiellement la cause d'erreurs donc à revoir
 '''
