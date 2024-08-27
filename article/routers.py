@@ -4,7 +4,7 @@ from sqlalchemy import select
 
 from core.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
-from . import crud, schemas, models
+from . import schemas, models
 
 router = APIRouter()
 
