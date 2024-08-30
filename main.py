@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import article.routers
+import article.routers, club.routers, entreprise.routers, event.routers, innovation.routers, programs.routers, projet_coop.routers, stage.routers
 
 app = FastAPI(
     title="API du site de l'EPL",

@@ -1,6 +1,6 @@
 # Backend du site de l'EPL
 
-Le projet consiste à concevoir, créer et développer le site web pour l'École Polytechnique de Lomé (EPL) afin de communiquer sur les activités du service administratif de l'école.
+Developpement du backend du site web de l'École Polytechnique de Lomé (EPL)
 
 ## Fonctionnalités
 
@@ -118,7 +118,8 @@ Si vous rencontrez des problèmes avec les migrations, vérifiez les éléments 
 
 
 ## Démarrage du Serveur
-Pour démarrer le serveur de développement :
+    Pour démarrer le serveur de développement :
+    
     ```bash
     uvicorn app.main:app --reload
 

@@ -76,7 +76,7 @@ async def delete_event(id: int, db: AsyncSession = Depends(get_db)):
     old_event = result.scalar_one_or_none()  # pour obtenir un seul ou None
 
     if not old_event:
-        raise HTTPException(status_code=404, detail="Entreprise avec ID {id} introuvable")
+        raise HTTPException(status_code=404, detail="Evenement avec ID {id} introuvable")
     
     await db.delete(old_event)
     await db.commit()

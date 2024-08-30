@@ -15,7 +15,7 @@ router = APIRouter()
     response_description = "Entreprise créé avec succes"
 )
 async def create_entreprise(entreprise: schemas.EntrepriseCreate, db: AsyncSession = Depends(get_db)):
-    new_club = models.Entreprise(
+    new_entreprise = models.Entreprise(
         name=entreprise.name,
         domain=entreprise.domain,
         mail=entreprise.mail,
@@ -26,11 +26,11 @@ async def create_entreprise(entreprise: schemas.EntrepriseCreate, db: AsyncSessi
         partnership_date=entreprise.partnership_date,
     )
     
-    db.add(new_club)
+    db.add(new_entreprise)
     await db.commit()
-    await db.refresh(new_club)
+    await db.refresh(new_entreprise)
 
-    return new_club
+    return new_entreprise
     
 
 @router.get(
@@ -51,14 +51,14 @@ async def get_entreprises(db: AsyncSession = Depends(get_db)):
     response_model_by_alias = True,
     response_description = "Entreprise à jour"
 )
-async def update_entreprise(id_entreprise: int, club: schemas.EntrepriseUpdate, db: AsyncSession = Depends(get_db)):
+async def update_entreprise(id_entreprise: int, entreprise: schemas.EntrepriseUpdate, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(models.Entreprise).where(models.Entreprise.id == id_entreprise))
     old_entreprise = result.scalar_one_or_none()  # pour obtenir un seul ou None
 
     if old_entreprise is None:
         raise HTTPException(status_code=404, detail="Entreprise introuvable")
     
-    for key, value in club.model_dump(exclude_unset=True).items():      # Mettre à jour les champs
+    for key, value in entreprise.model_dump(exclude_unset=True).items():      # Mettre à jour les champs
         setattr(old_entreprise, key, value)
 
     await db.commit()

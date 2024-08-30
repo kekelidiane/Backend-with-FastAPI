@@ -49,7 +49,7 @@ async def get_clubs(db: AsyncSession = Depends(get_db)):
 )
 async def update_club(id_club: int, club: schemas.ClubUpdate, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(models.Club).where(models.Club.id == id_club))
-    old_club = result.scalar_one_or_none()  # pour obtenir un seul article ou None
+    old_club = result.scalar_one_or_none()  # pour obtenir un seul ou None
 
     if old_club is None:
         raise HTTPException(status_code=404, detail="Club introuvable")
@@ -69,7 +69,7 @@ async def update_club(id_club: int, club: schemas.ClubUpdate, db: AsyncSession =
 )
 async def delete_club(id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(models.Club).where(models.Club.id == id))
-    old_club = result.scalar_one_or_none()  # pour obtenir un seul article ou None
+    old_club = result.scalar_one_or_none()  # pour obtenir un seul ou None
 
     if not old_club:
         raise HTTPException(status_code=404, detail="Club avec ID {id} introuvable")
