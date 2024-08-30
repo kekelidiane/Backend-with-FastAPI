@@ -4,25 +4,25 @@ from typing import Optional
 
 
 class Project(BaseModel):
-    name = str
+    name: str
     date_begin: Optional[datetime] = datetime.now()
     date_end: Optional[datetime] = datetime.now()
-    duration = int
-    project_type = str
-    partners = str
-    description = str
+    duration: int
+    project_type: str
+    partners: str
+    description: str
 
     class Config:
         from_attributes = True
 
 class ProjectCreate(BaseModel):
-    name = str
+    name: str
     date_begin: Optional[datetime] = datetime.now()
     date_end: Optional[datetime] = datetime.now()
-    duration = int
-    project_type = str
-    partners = str
-    description = str
+    duration: int
+    project_type: str
+    partners: str
+    description: str
 
     class Config:
         from_attributes = True

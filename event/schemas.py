@@ -4,27 +4,27 @@ from typing import Optional
 
 
 class Event(BaseModel):
-    title = str
+    title: str
     date_begin: Optional[datetime] = datetime.now()
     date_end: Optional[datetime] = datetime.now()
-    duration = int
-    location = str
-    partners = str
-    description = str
-    participants = str
+    duration: int
+    location: str
+    partners: str
+    description: str
+    participants: str
 
     class Config:
         from_attributes = True
 
 class EventCreate(BaseModel):
-    title = str
+    title: str
     date_begin: Optional[datetime] = datetime.now()
     date_end: Optional[datetime] = datetime.now()
-    duration = int
-    location = str
-    partners = str
-    description = str
-    participants = str
+    duration: int
+    location: str
+    partners: str
+    description: str
+    participants: str
 
     class Config:
         from_attributes = True

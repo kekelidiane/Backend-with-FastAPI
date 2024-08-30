@@ -4,19 +4,19 @@ from typing import Optional
 
 
 class Innovation(BaseModel):
-    name = str
-    innovation_type = str
+    name: str
+    innovation_type: str
     date: Optional[datetime] = datetime.now()
-    description = str
+    description: str
 
     class Config:
         from_attributes = True
 
 class InnovationCreate(BaseModel):
-    name = str
-    innovation_type = str
+    name: str
+    innovation_type: str
     date: Optional[datetime] = datetime.now()
-    description = str
+    description: str
 
     class Config:
         from_attributes = True

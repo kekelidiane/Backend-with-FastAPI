@@ -4,27 +4,27 @@ from typing import Optional
 
 
 class Stage(BaseModel):
-    post = str
+    post: str
     date_begin: Optional[datetime] = datetime.now()
     date_end: Optional[datetime] = datetime.now()
-    duration = int
-    domain = str
-    entreprise = str
-    remuneration_salary = float
-    stage_type = str
+    duration: int
+    domain: str
+    entreprise: str
+    remuneration_salary: float
+    stage_type: str
 
     class Config:
         from_attributes = True
 
 class StageCreate(BaseModel):
-    post = str
+    post: str
     date_begin: Optional[datetime] = datetime.now()
     date_end: Optional[datetime] = datetime.now()
-    duration = int
-    domain = str
-    entreprise = str
-    remuneration_salary = float
-    stage_type = str
+    duration: int
+    domain: str
+    entreprise: str
+    remuneration_salary: float
+    stage_type: str
 
     class Config:
         from_attributes = True

@@ -6,11 +6,11 @@ from typing import Optional
 class Entreprise(BaseModel):
     name: str
     domain: str
-    mail = str
-    address = str
-    site = str
-    description = str
-    partnership_type = str
+    mail: str
+    address:str
+    site: str
+    description: str
+    partnership_type: str
     partnership_date: Optional[datetime] = datetime.now()
 
     class Config:
@@ -19,10 +19,10 @@ class Entreprise(BaseModel):
 class EntrepriseCreate(BaseModel):
     name: str
     domain: str
-    mail = str
-    address = str
-    site = str
-    description = str
+    mail: str
+    address: str
+    site: str
+    description: str
     partnership_type: Optional[str] = "Azerty uiop"
     partnership_date: Optional[datetime] = datetime.now()
 
