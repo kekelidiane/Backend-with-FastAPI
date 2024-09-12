@@ -1,1 +1,4 @@
 authenv
+.env
+.vscode
+__pycache__

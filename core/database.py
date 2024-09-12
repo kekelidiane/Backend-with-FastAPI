@@ -2,9 +2,15 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from pydantic_settings import BaseSettings
 import os
+from dotenv import load_dotenv
+from gino import Gino
+
+load_dotenv()       # Charger les variables d'environnement du fichier .env
+
+db = Gino()     # Initialiser la base de données avec Gino
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql+asyncpg://diane:dianePg19@localhost/siteDB")
+    DATABASE_URL = os.getenv("DATABASE_URL")        # Accéder aux variables d'environnement
 
 settings = Settings()
 
