@@ -1,12 +1,12 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 
 class Entreprise(BaseModel):
     name: str
     domain: str
-    mail: str
+    mail: EmailStr
     address:str
     site: str
     description: str
@@ -19,7 +19,7 @@ class Entreprise(BaseModel):
 class EntrepriseCreate(BaseModel):
     name: str
     domain: str
-    mail: str
+    mail: EmailStr
     address: str
     site: str
     description: str
@@ -32,7 +32,7 @@ class EntrepriseCreate(BaseModel):
 class EntrepriseUpdate(BaseModel):
     name: Optional[str] = None
     domain: Optional[str] = None
-    mail: Optional[str] = None
+    mail: Optional[EmailStr] = None
     address: Optional[str] = None
     site: Optional[str] = None
     description: Optional[str] = None

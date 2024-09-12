@@ -3,7 +3,7 @@ import article.routers, club.routers, entreprise.routers, event.routers, innovat
 # import auth.routers
 
 app = FastAPI(
-    title="API du site de l'EPL",
+    title="API du site",
     summary="------------ Backend du portail web de l'EPL ------------.",
 )
 
