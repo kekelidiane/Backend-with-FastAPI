@@ -1,10 +1,8 @@
-from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import declarative_base
 
-Base = declarative_base()
+from core.database import db
 
-class Club(Base):
+class Club(db.Model):
     __tablename__ = "clubs"
 
     id = Column(Integer, primary_key=True, index=True)

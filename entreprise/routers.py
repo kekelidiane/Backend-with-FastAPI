@@ -1,8 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
 
-from core.database import get_db
-from sqlalchemy.ext.asyncio import AsyncSession
 from . import schemas, models
 
 router = APIRouter()
@@ -10,12 +7,12 @@ router = APIRouter()
 @router.post(
     '/',
     response_model=schemas.Entreprise,
-    status_code = status.HTTP_200_OK,
-    response_model_by_alias = True,
-    response_description = "Entreprise créé avec succes"
+    status_code=status.HTTP_200_OK,
+    response_model_by_alias=True,
+    response_description="Entreprise créée avec succès"
 )
-async def create_entreprise(entreprise: schemas.EntrepriseCreate, db: AsyncSession = Depends(get_db)):
-    new_entreprise = models.Entreprise(
+async def create_entreprise(entreprise: schemas.EntrepriseCreate):
+    new_entreprise = await models.Entreprise.create(
         name=entreprise.name,
         domain=entreprise.domain,
         mail=entreprise.mail,
@@ -26,58 +23,47 @@ async def create_entreprise(entreprise: schemas.EntrepriseCreate, db: AsyncSessi
         partnership_date=entreprise.partnership_date,
     )
     
-    db.add(new_entreprise)
-    await db.commit()
-    await db.refresh(new_entreprise)
-
     return new_entreprise
-    
 
 @router.get(
     '/',
-    status_code = status.HTTP_200_OK,
-    response_model_by_alias = True,
-    response_description = "Entreprises recupérés"
+    status_code=status.HTTP_200_OK,
+    response_model_by_alias=True,
+    response_description="Entreprises récupérées"
 )
-async def get_entreprises(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Entreprise))
-    entreprises = result.scalars().all()
+async def get_entreprises():
+    entreprises = await models.Entreprise.query.gino.all()
     return entreprises
 
 @router.put(
     "/{id}",
     response_model=schemas.Entreprise,
-    status_code = status.HTTP_200_OK,
-    response_model_by_alias = True,
-    response_description = "Entreprise à jour"
+    status_code=status.HTTP_200_OK,
+    response_model_by_alias=True,
+    response_description="Entreprise mise à jour"
 )
-async def update_entreprise(id_entreprise: int, entreprise: schemas.EntrepriseUpdate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Entreprise).where(models.Entreprise.id == id_entreprise))
-    old_entreprise = result.scalar_one_or_none()  # pour obtenir un seul ou None
+async def update_entreprise(id_entreprise: int, entreprise: schemas.EntrepriseUpdate):
+    old_entreprise = await models.Entreprise.get(id_entreprise)
 
-    if old_entreprise is None:
+    if not old_entreprise:
         raise HTTPException(status_code=404, detail="Entreprise introuvable")
     
-    for key, value in entreprise.model_dump(exclude_unset=True).items():      # Mettre à jour les champs
-        setattr(old_entreprise, key, value)
+    # Mettre à jour les champs
+    await old_entreprise.update(**entreprise.model_dump(exclude_unset=True)).apply()
 
-    await db.commit()
-    await db.refresh(old_entreprise)
-    
     return old_entreprise
+
 
 @router.delete(
     "/{id}",
-    status_code = status.HTTP_200_OK,
-    response_description = "Entreprise supprimé !"
+    status_code=status.HTTP_200_OK,
+    response_description="Entreprise supprimée"
 )
-async def delete_entreprise(id: int, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Entreprise).where(models.Entreprise.id == id))
-    old_entreprise = result.scalar_one_or_none()  # pour obtenir un seul ou None
+async def delete_entreprise(id: int):
+    old_entreprise = await models.Entreprise.get(id)
 
     if not old_entreprise:
-        raise HTTPException(status_code=404, detail="Entreprise avec ID {id} introuvable")
+        raise HTTPException(status_code=404, detail=f"Entreprise avec ID {id} introuvable")
     
-    await db.delete(old_entreprise)
-    await db.commit()
-    
+    await old_entreprise.delete()
+    return {"detail": "Entreprise supprimée avec succès"}

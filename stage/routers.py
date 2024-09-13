@@ -1,8 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
 
-from core.database import get_db
-from sqlalchemy.ext.asyncio import AsyncSession
 from . import schemas, models
 
 router = APIRouter()
@@ -10,74 +7,62 @@ router = APIRouter()
 @router.post(
     '/',
     response_model=schemas.Stage,
-    status_code = status.HTTP_200_OK,
-    response_model_by_alias = True,
-    response_description = "Stage créé avec succes"
+    status_code=status.HTTP_200_OK,
+    response_model_by_alias=True,
+    response_description="Stage créé avec succès"
 )
-async def create_offer(offer: schemas.StageCreate, db: AsyncSession = Depends(get_db)):
-    new_offer = models.Stage(
-        post=offer.post,
-        date_begin=offer.date_begin,
-        date_end=offer.date_end,
-        duration=offer.duration,
-        domain=offer.domain,
-        entreprise=offer.entreprise,
-        remuneration_salary=offer.remuneration_salary,
-        stage_type=offer.stage_type
+async def create_stage(stage: schemas.StageCreate):
+    new_stage = await models.Stage.create(
+        post=stage.post,
+        date_begin=stage.date_begin,
+        date_end=stage.date_end,
+        duration=stage.duration,
+        domain=stage.domain,
+        entreprise=stage.entreprise,
+        remuneration_salary=stage.remuneration_salary,
+        stage_type=stage.stage_type
     )
-    
-    db.add(new_offer)
-    await db.commit()
-    await db.refresh(new_offer)
-
-    return new_offer
-    
+    return new_stage
 
 @router.get(
     '/',
-    status_code = status.HTTP_200_OK,
-    response_model_by_alias = True,
-    response_description = "Offres de stage recupérés"
+    status_code=status.HTTP_200_OK,
+    response_model_by_alias=True,
+    response_description="Stages récupérés"
 )
-async def get_offers(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Stage))
-    offers = result.scalars().all()
-    return offers
+async def get_stages():
+    stages = await models.Stage.query.gino.all()
+    return stages
 
 @router.put(
     "/{id}",
     response_model=schemas.Stage,
-    status_code = status.HTTP_200_OK,
-    response_model_by_alias = True,
-    response_description = "Offre de stage à jour"
+    status_code=status.HTTP_200_OK,
+    response_model_by_alias=True,
+    response_description="Stage mis à jour"
 )
-async def update_offer(id_offer: int, offer: schemas.StageUpdate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Stage).where(models.Stage.id == id_offer))
-    old_offer = result.scalar_one_or_none()  # pour obtenir un seul ou None
+async def update_stage(id: int, stage: schemas.StageUpdate):
+    old_stage = await models.Stage.get(id)
 
-    if old_offer is None:
-        raise HTTPException(status_code=404, detail="Offre de stage introuvable")
-    
-    for key, value in offer.model_dump(exclude_unset=True).items():      # Mettre à jour les champs
-        setattr(old_offer, key, value)
+    if not old_stage:
+        raise HTTPException(status_code=404, detail="Stage introuvable")
 
-    await db.commit()
-    await db.refresh(old_offer)
-    
-    return old_offer
+    await old_stage.update(
+        **stage.dict(exclude_unset=True)
+    ).apply()
+
+    return old_stage
 
 @router.delete(
     "/{id}",
-    status_code = status.HTTP_200_OK,
-    response_description = "Offre supprimé !"
+    status_code=status.HTTP_200_OK,
+    response_description="Stage supprimé !"
 )
-async def delete_offer(id: int, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Stage).where(models.Stage.id == id))
-    old_offer = result.scalar_one_or_none()  # pour obtenir un seul ou None
+async def delete_stage(id: int):
+    old_stage = await models.Stage.get(id)
 
-    if not old_offer:
-        raise HTTPException(status_code=404, detail="Stage avec ID {id} introuvable")
-    
-    await db.delete(old_offer)
-    await db.commit()
-    
+    if not old_stage:
+        raise HTTPException(status_code=404, detail=f"Stage avec ID {id} introuvable")
+
+    await old_stage.delete()
+    return {"detail": "Stage supprimé avec succès"}

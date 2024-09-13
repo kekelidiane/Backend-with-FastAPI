@@ -1,10 +1,9 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import declarative_base
 
-Base = declarative_base()
+from core.database import db
 
-class Stage(Base):
+class Stage(db.Model):
     __tablename__ = "stages"
 
     id = Column(Integer, primary_key=True, index=True)

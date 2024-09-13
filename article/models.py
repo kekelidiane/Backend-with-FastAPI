@@ -1,9 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import declarative_base
 
-Base = declarative_base()
+from core.database import db
 
-class Article(Base):
+class Article(db.Model):
     __tablename__ = "articles"
 
     id = Column(Integer, primary_key=True, index=True)

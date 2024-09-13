@@ -1,10 +1,9 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import declarative_base
 
-Base = declarative_base()
+from core.database import db
 
-class Program(Base):
+class Program(db.Model):
     __tablename__ = "programs"
 
     id = Column(Integer, primary_key=True, index=True)

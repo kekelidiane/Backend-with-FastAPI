@@ -1,79 +1,67 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from fastapi import APIRouter, HTTPException, status
 
-from core.database import get_db
-from sqlalchemy.ext.asyncio import AsyncSession
 from . import schemas, models
 
 router = APIRouter()
 
+# Route POST: Créer une innovation
 @router.post(
     '/',
     response_model=schemas.Innovation,
-    status_code = status.HTTP_200_OK,
-    response_model_by_alias = True,
-    response_description = "Innovation créé avec succes"
+    status_code=status.HTTP_200_OK,
+    response_model_by_alias=True,
+    response_description="Innovation créée avec succès"
 )
-async def create_innovation(innovation: schemas.InnovationCreate, db: AsyncSession = Depends(get_db)):
-    new_innovation = models.Innovation(
+async def create_innovation(innovation: schemas.InnovationCreate):
+    new_innovation = await models.Innovation.create(
         name=innovation.name,
         innovation_type=innovation.innovation_type,
         date=innovation.date,
         description=innovation.description,
     )
-    
-    db.add(new_innovation)
-    await db.commit()
-    await db.refresh(new_innovation)
-
     return new_innovation
-    
 
+# Route GET: Récupérer toutes les innovations
 @router.get(
     '/',
-    status_code = status.HTTP_200_OK,
-    response_model_by_alias = True,
-    response_description = "innovations recupérés"
+    status_code=status.HTTP_200_OK,
+    response_model_by_alias=True,
+    response_description="Innovations récupérées"
 )
-async def get_innovations(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Innovation))
-    innovations = result.scalars().all()
+async def get_innovations():
+    innovations = await models.Innovation.query.gino.all()
     return innovations
 
+# Route PUT: Mettre à jour une innovation par ID
 @router.put(
     "/{id}",
     response_model=schemas.Innovation,
-    status_code = status.HTTP_200_OK,
-    response_model_by_alias = True,
-    response_description = "Innovation à jour"
+    status_code=status.HTTP_200_OK,
+    response_model_by_alias=True,
+    response_description="Innovation mise à jour"
 )
-async def update_innovation(id_innovation: int, innovation: schemas.InnovationUpdate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Innovation).where(models.Innovation.id == id_innovation))
-    old_innovation = result.scalar_one_or_none()  # pour obtenir un seul ou None
+async def update_innovation(id_innovation: int, innovation: schemas.InnovationUpdate):
+    old_innovation = await models.Innovation.get(id_innovation)
 
-    if old_innovation is None:
-        raise HTTPException(status_code=404, detail="innovation introuvable")
+    if not old_innovation:
+        raise HTTPException(status_code=404, detail="Innovation introuvable")
     
-    for key, value in innovation.model_dump(exclude_unset=True).items():      # Mettre à jour les champs
-        setattr(old_innovation, key, value)
-
-    await db.commit()
-    await db.refresh(old_innovation)
+    # Mettre à jour les champs de l'innovation
+    await old_innovation.update(**innovation.dict(exclude_unset=True)).apply()
     
     return old_innovation
 
+# Route DELETE: Supprimer une innovation par ID
 @router.delete(
     "/{id}",
-    status_code = status.HTTP_200_OK,
-    response_description = "Innovation supprimé !"
+    status_code=status.HTTP_200_OK,
+    response_description="Innovation supprimée"
 )
-async def delete_innovation(id: int, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(models.Innovation).where(models.Innovation.id == id))
-    old_innovation = result.scalar_one_or_none()  # pour obtenir un seul ou None
+async def delete_innovation(id: int):
+    old_innovation = await models.Innovation.get(id)
 
     if not old_innovation:
-        raise HTTPException(status_code=404, detail="Innovation avec ID {id} introuvable")
+        raise HTTPException(status_code=404, detail=f"Innovation avec ID {id} introuvable")
     
-    await db.delete(old_innovation)
-    await db.commit()
-    
+    await old_innovation.delete()
+    return {"detail": "Innovation supprimée avec succès"}

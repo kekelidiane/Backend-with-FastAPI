@@ -1,7 +1,6 @@
-from gino import Gino
 from sqlalchemy import Column, Integer, String, JSON
 
-from database import db
+from core.database import db
 
 class User(db.Model):
     __tablename__ = 'users'
