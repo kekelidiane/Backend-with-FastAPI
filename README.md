@@ -29,8 +29,8 @@ Developpement du backend du site web de l'École Polytechnique de Lomé (EPL)
 ## Prérequis
 
 - Python 3.8+
+- FastAPI
 - PostgreSQL
-- [Poetry](https://python-poetry.org/)
 
 ## Installation
 
@@ -49,73 +49,11 @@ Developpement du backend du site web de l'École Polytechnique de Lomé (EPL)
     ```sh
     pip install -r requirements.txt
     ```
-    Ou, si vous utilisez Poetry :
-    ```sh
-    poetry install
-    ```
-
+    
 4. Configurez les variables d'environnement. Créez un fichier `.env` à la racine du projet et ajoutez les variables suivantes :
     ```env
     DATABASE_URL=postgresql+asyncpg://user:password@localhost/dbname
     ```
-
-5. Initialisez la base de données :
-    ```sh
-    alembic upgrade head
-    ```
-
-## Gestion des Migrations de Base de Données avec Alembic
-
-### 1. **Info**
-
-[Alembic](https://alembic.sqlalchemy.org/en/latest/) est un outil de gestion des migrations pour SQLAlchemy, utilisé pour gérer les changements dans le schéma de base de données de manière versionnée. Dans ce projet, Alembic est utilisé pour suivre et appliquer les modifications apportées aux modèles SQLAlchemy.
-
-### 2. **Installation**
-
-Assurez-vous d'avoir Alembic installé dans votre environnement virtuel. Vous pouvez l'installer via pip :
-
-    ```bash
-    pip install alembic
-    ```	
-
-### 3. **Configuration d'Alembic**
-
-Le fichier de configuration `alembic.ini` contient les paramètres de connexion à votre base de données. Assurez-vous que les paramètres suivants sont correctement configurés :
-
-   [alembic]
-   script_location = alembic
-   sqlalchemy.url = postgresql+asyncpg://user:password@localhost/dbname
-
-### 4. **Utilisation**
-
-1. **Créer une Nouvelle Migration**
-
-   Pour générer un nouveau fichier de migration en fonction des modifications apportées aux modèles, utilisez :
-
-   ```bash
-   alembic revision --autogenerate -m "Description de la migration"
-
-2. **Appliquer les Migrations**
-
-    Pour appliquer les migrations à la base de données, utilisez :
-
-    ```bash
-    alembic upgrade head
-
-3. **Revenir à une Migration Précédente**
-
-    Si vous devez annuler les migrations, vous pouvez revenir à une révision précédente en utilisant :
-
-    ```bash
-    alembic downgrade <revision>
-
-### 5. **Conseils de Débogage**
-Si vous rencontrez des problèmes avec les migrations, vérifiez les éléments suivants :
-
-- **Configuration de la Base de Données** : Assurez-vous que les informations de connexion dans `alembic.ini` sont correctes.
-- **MetaData** : Vérifiez que `target_metadata` dans `env.py` est correctement configuré avec vos modèles SQLAlchemy.
-- **Journalisation** : Consultez les journaux pour des messages d'erreur spécifiques lors de l'exécution des commandes Alembic.
-
 
 ## Démarrage du Serveur
     Pour démarrer le serveur de développement :

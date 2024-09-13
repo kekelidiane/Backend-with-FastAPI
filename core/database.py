@@ -1,34 +1,28 @@
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
-from pydantic_settings import BaseSettings
 import os
 from dotenv import load_dotenv
 from gino import Gino
+from pydantic_settings import BaseSettings
+from fastapi import FastAPI
 
-load_dotenv()       # Charger les variables d'environnement du fichier .env
+load_dotenv()                       # Charger les variables d'environnement depuis .env
 
-db = Gino()     # Initialiser la base de données avec Gino
+db = Gino()                         # Initialiser la base de données avec Gino
 
 class Settings(BaseSettings):
-    DATABASE_URL = os.getenv("DATABASE_URL")        # Accéder aux variables d'environnement
+    DATABASE_URL: str = os.getenv("DATABASE_URL")
 
+# Charger les paramètres
 settings = Settings()
 
 DATABASE_URL = settings.DATABASE_URL
 
-engine = create_async_engine(DATABASE_URL)  # Création de l'engine asynchrone
+# Iinitialisation de la base de données
+async def init_db(app: FastAPI):
+    await db.set_bind(DATABASE_URL)             # Attacher la base de données à l'application FastAPI
+    await db.gino.create_all()              # Créer toutes les tables dans la base de données
+    app.state.db = db
 
-SessionLocal = sessionmaker(    # Configuration de sessionmaker pour les sessions asynchrones
-    autocommit=False,
-    autoflush=False,
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False
-)
+async def close_db(app: FastAPI):           # Fonction de fermeture de la connexion à la base de données
+    await db.pop_bind().close()
 
-async def get_db(): # Fonction pour obtenir la session de base de données
-        async with SessionLocal() as db:
-            try:
-                yield db
-            finally:
-                await db.close()
+# plus besoin de sessionmaker ou de AsyncSession, car Gino gère tout cela.
