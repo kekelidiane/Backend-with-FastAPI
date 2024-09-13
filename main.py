@@ -1,11 +1,16 @@
 from fastapi import FastAPI
 import article.routers, club.routers, entreprise.routers, event.routers, innovation.routers, programs.routers, projet_coop.routers, stage.routers
 # import auth.routers
-
+from core.database import init_db, close_db
 app = FastAPI(
     title="API du site",
     summary="------------ Backend du portail web de l'EPL ------------.",
 )
+
+
+@app.on_event("startup")        #appel de l'initialisation de la base de données
+async def startup(): 
+    await init_db(app)
 
 # app.include_router(auth.router, prefix="/auth")
 app.include_router(article.routers.router, prefix="/article")
@@ -16,3 +21,8 @@ app.include_router(innovation.routers.router, prefix="/innovation")
 app.include_router(programs.routers.router, prefix="/programs")
 app.include_router(projet_coop.routers.router, prefix="/project")
 app.include_router(stage.routers.router, prefix="/offre_stage")
+
+
+@app.on_event("shutdown")       #appel de la fermerture de la connexion
+async def shutdown():
+    await close_db(app)
