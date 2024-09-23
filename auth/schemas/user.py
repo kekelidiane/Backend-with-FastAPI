@@ -6,19 +6,20 @@ class User(BaseModel):
     username: str
     full_name: str = Field(...)
     email: EmailStr = Field(...)
-    phone: int
+    phone: str
     address: str
 
-class CreateUser(User): 
+class UserCreate(User): 
     password: str = Field(...)
     confirm_password: str = Field(...)
 
-class UpdateUser(BaseModel):
+class UserUpdate(BaseModel):
     username: Optional[str] = None
     full_name: Optional[str] = None
-    email: Optional[str] = None
-    phone: Optional[int] = None
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = None
     address: Optional[str] = None
+    old_password: Optional[str] = None
     password: Optional[str] = None
     confirm_password: Optional[str] = None
 

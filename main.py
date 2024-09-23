@@ -1,7 +1,8 @@
 from fastapi import FastAPI
-import article.routers, club.routers, entreprise.routers, event.routers, innovation.routers, programs.routers, projet_coop.routers, stage.routers
-# import auth.routers
+
+import auth.routers, article.routers, club.routers, entreprise.routers, event.routers, innovation.routers, programs.routers, projet_coop.routers, stage.routers
 from core.database import init_db, close_db
+
 app = FastAPI(
     title="API du site",
     summary="------------ Backend du portail web de l'EPL ------------.",
@@ -12,7 +13,7 @@ app = FastAPI(
 async def startup(): 
     await init_db(app)
 
-# app.include_router(auth.router, prefix="/auth")
+app.include_router(auth.routers.router)
 app.include_router(article.routers.router, prefix="/article")
 app.include_router(club.routers.router, prefix="/club")
 app.include_router(entreprise.routers.router, prefix="/entreprise")
