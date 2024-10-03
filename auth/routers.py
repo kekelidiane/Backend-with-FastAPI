@@ -1,11 +1,11 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from core.database import db
 from auth.functions import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
+    oauth2_scheme,
     authenticate_user,
     expire_token,
     create_access_token,
@@ -13,7 +13,6 @@ from auth.functions import (
     get_current_user,
     hash_password,
     is_token_expired,
-    oauth2_scheme,
     save_token,
     verify_password,
 )

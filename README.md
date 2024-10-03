@@ -1,30 +1,4 @@
-# Backend du site de l'EPL
-
-Developpement du backend du site web de l'École Polytechnique de Lomé (EPL)
-
-## Fonctionnalités
-
-- **[FastAPI](https://fastapi.tiangolo.com/)** (Python 3.8)
-- **[PostgreSQL](https://www.postgresql.org/)** pour la base de données
-- **[SqlAlchemy](https://www.sqlalchemy.org/)** pour l'ORM
-
-## Fonctionnalités
-
-- Support informatif sur la structure institutionnelle et l'organisation
-- Support informatif sur les programmes de formation et les cours
-- Support informatif sur les procédures de recrutement et les concours
-- Support informatif sur la vie et les activités sur le campus
-- Support informatif sur les partenaires académiques nationaux et internationaux
-- Support informatif sur les partenaires commerciaux nationaux et internationaux
-- Support informatif sur la recherche, l'innovation, le transfert et les services
-- Accès à un espace extranet réservé aux ressources internes
-- Interface de dialogue et de partage d'expériences ou de témoignages avec les étudiants en mobilité (blog et forums)
-- Interface de collecte de données des nouveaux candidats (formulaire de contact)
-- Gestion du calendrier partagé, y compris la gestion des calendriers de groupe par e-mail ou en collaboration avec les opérateurs télécoms (par SMS)
-- Back office pour le suivi des activités du site (récupération des formulaires, mise à jour des listes de diffusion, téléversement de documents et de ressources partenaires, etc.)
-- Intégration avec les systèmes tiers (comptes de réseaux sociaux de l'EPL)
-- Messagerie électronique pour le personnel de l'EPL (gestion des comptes EPL)
-- Annuaire, support technique interne
+# Backend d'un site à revoir 
 
 ## Prérequis
 
@@ -81,7 +55,3 @@ Pour accéder à la documentation interactive de l'API, démarrez le serveur et 
 ## Contribution
 
 Les contributions sont les bienvenues !
-
-## License
-
-Pas encore définie

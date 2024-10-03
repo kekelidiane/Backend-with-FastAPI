@@ -9,11 +9,11 @@ app = FastAPI(
 )
 
 
-@app.on_event("startup")        #appel de l'initialisation de la base de données
+@app.on_event("startup")        #initialisation de la base de données
 async def startup(): 
     await init_db(app)
 
-app.include_router(auth.routers.router)
+app.include_router(auth.routers.router)     #pas besoin de prefix, FastAPI n'en supporte ppas
 app.include_router(article.routers.router, prefix="/article")
 app.include_router(club.routers.router, prefix="/club")
 app.include_router(entreprise.routers.router, prefix="/entreprise")
@@ -24,6 +24,6 @@ app.include_router(projet_coop.routers.router, prefix="/project")
 app.include_router(stage.routers.router, prefix="/offre_stage")
 
 
-@app.on_event("shutdown")       #appel de la fermerture de la connexion
+@app.on_event("shutdown")       #fermerture de la connexion
 async def shutdown():
     await close_db(app)

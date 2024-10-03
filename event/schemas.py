@@ -2,6 +2,14 @@ from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional
 
+class Participant(BaseModel):
+    firstname: str
+    lastname: str
+    contact: str
+    address: str
+
+    class Config:
+        from_attributes = True
 
 class Event(BaseModel):
     title: str
